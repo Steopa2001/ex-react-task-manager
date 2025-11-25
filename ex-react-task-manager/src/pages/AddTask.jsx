@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 
 const AddTask = () => {
+      const { addTask } = useContext(GlobalContext);
   return (
     <section>
       <h1 className="mb-4">Add Task</h1>

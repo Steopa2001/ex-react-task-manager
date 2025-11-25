@@ -3,7 +3,7 @@ import { GlobalContext } from "../context/GlobalContext";
 import TaskRow from "../components/TaskRow";
 
 const TaskList = () => {
-  const { tasks } = useContext(GlobalContext);
+  const { tasks, addTask, removeTask, updateTask } = useContext(GlobalContext);
 
   return (
     <section>
@@ -17,7 +17,7 @@ const TaskList = () => {
           </tr>
         </thead>
         <tbody>
-          {tasks.map(task => (
+          {tasks.map((task) => (
             <TaskRow key={task.id} task={task} />
           ))}
         </tbody>
