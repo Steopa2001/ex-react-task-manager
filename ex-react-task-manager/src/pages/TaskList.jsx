@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalContext";
+import TaskRow from "../components/TaskRow";
 
 const TaskList = () => {
+  const { tasks } = useContext(GlobalContext);
+
   return (
     <section>
       <h1 className="mb-4">Task List</h1>
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Created At</th>
+            <th>Nome</th>
+            <th>Stato</th>
+            <th>Data di Creazione</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Example task</td>
-            <td>To do</td>
-            <td>—</td>
-          </tr>
+          {tasks.map(task => (
+            <TaskRow key={task.id} task={task} />
+          ))}
         </tbody>
       </table>
     </section>
