@@ -33,7 +33,24 @@ export function useTasks() {
   }
 
  
-  function removeTask(taskId) {}
+async function removeTask(taskId) {
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  try {
+    const res = await fetch(`${apiUrl}/tasks/${taskId}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    if (data.success) {
+      setTasks(prevTasks => prevTasks.filter(task => String(task.id) !== String(taskId)));
+      return true;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (err) {
+    throw err;
+  }
+}
+
   function updateTask(taskId, updates) {}
 
   return { tasks, addTask, removeTask, updateTask };
