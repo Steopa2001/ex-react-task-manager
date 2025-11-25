@@ -51,7 +51,30 @@ async function removeTask(taskId) {
   }
 }
 
-  function updateTask(taskId, updates) {}
+async function updateTask(updatedTask) {
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  try {
+    const res = await fetch(`${apiUrl}/tasks/${updatedTask.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setTasks(prevTasks =>
+        prevTasks.map(task =>
+          String(task.id) === String(updatedTask.id) ? data.task : task
+        )
+      );
+      return data.task;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (err) {
+    throw err;
+  }
+}
+
 
   return { tasks, addTask, removeTask, updateTask };
 }

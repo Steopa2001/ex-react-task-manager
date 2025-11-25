@@ -2,35 +2,46 @@ import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalContext";
 import Modal from "../components/Modal";
+import EditTaskModal from "../components/EditTaskModal";
 
 const TaskDetail = () => {
   const { id } = useParams();
-  const { tasks, removeTask } = useContext(GlobalContext);
+  const { tasks, updateTask, removeTask } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  
 
   const task = tasks.find(t => String(t.id) === String(id));
   if (!task) return <div>Task non trovata</div>;
 
-  function handleDeleteClick() {
-    setShowModal(true);
+  function handleEditClick() {
+    setShowEdit(true);
   }
 
-  async function handleConfirmDelete() {
+  async function handleSaveEdit(updated) {
     try {
-      await removeTask(task.id);
-      alert("Task eliminata con successo!");
-      setShowModal(false);
-      navigate("/tasks");
+      await updateTask(updated);
+      alert("Task modificata con successo!");
+      setShowEdit(false);
     } catch (err) {
-      setShowModal(false);
       alert("Errore: " + err.message);
     }
   }
 
-  function handleCloseModal() {
-    setShowModal(false);
+  function handleCloseEdit() {
+    setShowEdit(false);
   }
+
+  async function handleDeleteClick() {
+  try {
+    await removeTask(task.id);
+    alert("Task eliminata con successo!");
+    navigate("/tasks");
+  } catch (err) {
+    alert("Errore: " + err.message);
+  }
+}
+
 
   return (
     <section>
@@ -41,14 +52,15 @@ const TaskDetail = () => {
         <li className="list-group-item"><strong>Stato:</strong> {task.status}</li>
         <li className="list-group-item"><strong>Data creazione:</strong> {task.createdAt}</li>
       </ul>
-      <button className="btn btn-danger" onClick={handleDeleteClick}>Elimina Task</button>
-      <Modal
-        show={showModal}
-        title="Conferma eliminazione"
-        content={`Sei sicuro di voler eliminare il task "${task.title}"?`}
-        onClose={handleCloseModal}
-        onConfirm={handleConfirmDelete}
-        confirmText="Elimina"
+      <div className="d-flex gap-2">
+        <button className="btn btn-danger" onClick={handleDeleteClick}>Elimina Task</button>
+        <button className="btn btn-warning" onClick={handleEditClick}>Modifica Task</button>
+      </div>
+      <EditTaskModal
+        show={showEdit}
+        onClose={handleCloseEdit}
+        task={task}
+        onSave={handleSaveEdit}
       />
     </section>
   );
