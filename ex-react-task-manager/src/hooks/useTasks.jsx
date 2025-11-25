@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-// Hook personalizzato per task
 export function useTasks() {
   const [tasks, setTasks] = useState([]);
 
@@ -9,20 +8,33 @@ export function useTasks() {
     fetch(`${apiUrl}/tasks`)
       .then(res => res.json())
       .then(data => setTasks(data))
-      .catch(err => console.error("Errore loading tasks:", err));
+      .catch(err => console.error("Errore GET tasks:", err));
   }, []);
 
-  // Funzioni CRUD (al momento vuote)
-  function addTask(newTask) {
-    // da implementare
-  }
-  function removeTask(taskId) {
-    // da implementare
-  }
-  function updateTask(taskId, updates) {
-    // da implementare
+  // Funzione per aggiungere task
+  async function addTask(newTask) {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
+    try {
+      const res = await fetch(`${apiUrl}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTask),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTasks(prev => [...prev, data.task]);
+        return data.task;
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 
-  // Valori restituiti dal custom hook
+ 
+  function removeTask(taskId) {}
+  function updateTask(taskId, updates) {}
+
   return { tasks, addTask, removeTask, updateTask };
 }

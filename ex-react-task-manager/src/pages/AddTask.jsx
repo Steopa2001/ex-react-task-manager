@@ -1,21 +1,15 @@
 import React, { useState, useRef, useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
-// Costanti per validazione
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
 const AddTask = () => {
   const { addTask } = useContext(GlobalContext);
-
-  // Stato controllato per il titolo
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
-
-  // Ref non controllato per description e status
   const descriptionRef = useRef();
   const statusRef = useRef();
 
-  // Validazione titolo
   function validateTitle(value) {
     if (!value.trim()) return "Il titolo è obbligatorio";
     for (let c of value) {
@@ -24,19 +18,27 @@ const AddTask = () => {
     return "";
   }
 
-  // Submit handler
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const err = validateTitle(title);
     setError(err);
     if (err) return;
+
     const task = {
       title,
       description: descriptionRef.current.value,
       status: statusRef.current.value,
     };
-   
-    console.log("Nuovo task:", task);
+
+    try {
+      await addTask(task);
+      alert("Task aggiunta con successo!");
+      setTitle("");
+      descriptionRef.current.value = "";
+      statusRef.current.value = "To do";
+    } catch (err) {
+      alert("Errore: " + err.message);
+    }
   }
 
   return (
