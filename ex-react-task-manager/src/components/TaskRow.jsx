@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const getStatusStyle = (status) => {
   switch (status) {
@@ -16,7 +17,9 @@ const getStatusStyle = (status) => {
 const TaskRow = React.memo(({ task }) => {
   return (
     <tr>
-      <td>{task.title}</td>
+      <td>
+        <Link to={`/task/${task.id}`}>{task.title}</Link>
+      </td>
       <td style={getStatusStyle(task.status)}>{task.status}</td>
       <td>{task.createdAt}</td>
     </tr>

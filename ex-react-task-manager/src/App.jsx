@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar";
 import TaskList from "./pages/TaskList";
 import AddTask from "./pages/AddTask";
 import { GlobalProvider } from "./context/GlobalContext";
+import TaskDetail from "./pages/TaskDetail.jsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Navigate to="/tasks" replace />} />
             <Route path="/tasks" element={<TaskList />} />
             <Route path="/tasks/new" element={<AddTask />} />
+            <Route path="/task/:id" element={<TaskDetail />} />
           </Routes>
         </div>
       </div>
